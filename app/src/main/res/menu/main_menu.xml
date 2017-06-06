@@ -10,4 +10,15 @@
 
     </item>
 
+    <item
+        android:id="@+id/dice_animation_on"
+        android:title="Dice Animation"
+        android:orderInCategory="5"
+        app:showAsAction="never"
+        android:visible="true"
+        android:checkable="true"
+        android:checked="true">
+
+    </item>
+
 </menu>

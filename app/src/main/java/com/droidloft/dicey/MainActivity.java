@@ -8,19 +8,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String version = "0.1", buildDate = "5-26-2017";
+    private String version = "0.2", buildDate = "6-6-2017";
 
     private ImageView dice1ImageView, dice2ImageView;
     private Button rollButton;
     Vibrator vib;
+    boolean isDiceAnimationOn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         rollButton = (Button)findViewById(R.id.rollButton);
         vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
+        final Animation rollAnimation = AnimationUtils.loadAnimation(this, R.anim.rollanim);
+
+        final int[] diceimages = {R.drawable.dice1, R.drawable.dice2, R.drawable.dice3, R.drawable.dice4, R.drawable.dice5, R.drawable.dice6};
+
 
         rollButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,36 +52,17 @@ public class MainActivity extends AppCompatActivity {
                 int die1 = r.nextInt(7-1) + 1;
                 int die2 = r.nextInt(7-1) + 1;
 
+                int imgNumber1 = die1 - 1;
+                int imgNumber2 = die2 - 1;
 
-                if(die1 == 1){
-                    dice1ImageView.setImageResource(R.drawable.dice1);
-                } else if(die1 == 2){
-                    dice1ImageView.setImageResource(R.drawable.dice2);
-                } else if(die1 == 3){
-                    dice1ImageView.setImageResource(R.drawable.dice3);
-                } else if(die1 == 4) {
-                    dice1ImageView.setImageResource(R.drawable.dice4);
-                } else if(die1 == 5) {
-                    dice1ImageView.setImageResource(R.drawable.dice5);
-                } else {
-                    dice1ImageView.setImageResource(R.drawable.dice6);
-                }
-
-                if(die2 == 1){
-                    dice2ImageView.setImageResource(R.drawable.dice1);
-                } else if(die2 == 2){
-                    dice2ImageView.setImageResource(R.drawable.dice2);
-                } else if(die2 == 3){
-                    dice2ImageView.setImageResource(R.drawable.dice3);
-                } else if(die2 == 4) {
-                    dice2ImageView.setImageResource(R.drawable.dice4);
-                } else if(die2 == 5) {
-                    dice2ImageView.setImageResource(R.drawable.dice5);
-                } else {
-                    dice2ImageView.setImageResource(R.drawable.dice6);
+                if(isDiceAnimationOn){
+                    dice1ImageView.startAnimation(rollAnimation);
+                    dice2ImageView.startAnimation(rollAnimation);
                 }
 
 
+                dice1ImageView.setImageResource(diceimages[imgNumber1]);
+                dice2ImageView.setImageResource(diceimages[imgNumber2]);
 
 
             }
@@ -95,6 +84,23 @@ public class MainActivity extends AppCompatActivity {
             aboutAlert.setIcon(R.drawable.dice3);
             aboutAlert.setCancelable(true);
             aboutAlert.show();
+        }
+
+        if(item.getItemId() == R.id.dice_animation_on){
+
+            if(item.isChecked()) {
+                item.setChecked(false);
+                Toast.makeText(MainActivity.this, "Dice Animations Turned Off", Toast.LENGTH_SHORT).show();
+            } else {
+                item.setChecked(true);
+                Toast.makeText(MainActivity.this, "Dice Animations Turned On", Toast.LENGTH_SHORT).show();
+            }
+
+            if(isDiceAnimationOn == true) {
+                isDiceAnimationOn = false;
+            } else {
+                isDiceAnimationOn = true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
